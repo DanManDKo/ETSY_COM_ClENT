@@ -1,9 +1,10 @@
 package com.example.user.etsyclient.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,13 +16,24 @@ import android.view.MenuItem;
 
 import com.example.user.etsyclient.R;
 
+import com.example.user.etsyclient.contract.CategoriesContract;
+import com.example.user.etsyclient.presentor.CategoriesPresenter;
+import com.example.user.etsyclient.ui.adapter.ViewPagerAdapterMain;
+import com.example.user.etsyclient.ui.fragment.FavoritesListFragment;
+import com.example.user.etsyclient.ui.fragment.SearchFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    private FloatingActionButton mFab;
     private NavigationView mNavigationView;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    private CategoriesPresenter mCategoriesPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +41,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         initViews();
 
+
     }
 
 
     private void initViews() {
         initToolbar();
         initDrawer();
-        initFab();
         initNavigationView();
+        initViewPager();
     }
 
     private void initNavigationView() {
@@ -44,16 +57,18 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initFab() {
-        mFab = (FloatingActionButton) findViewById(R.id.fab_main);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    private void initViewPager() {
+        mViewPager = (ViewPager) findViewById(R.id.view_pager_main);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout_main);
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new SearchFragment());
+        fragments.add(new FavoritesListFragment());
+        ViewPagerAdapterMain adapter = new ViewPagerAdapterMain(getSupportFragmentManager(), fragments, this);
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+
     }
+
 
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
@@ -118,4 +133,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
