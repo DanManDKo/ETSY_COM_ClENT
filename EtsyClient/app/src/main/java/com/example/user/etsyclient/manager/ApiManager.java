@@ -3,12 +3,16 @@ package com.example.user.etsyclient.manager;
 import com.example.user.etsyclient.api.ApiService;
 import com.example.user.etsyclient.api.ApiSettings;
 import com.example.user.etsyclient.model.Category;
+import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.model.Response;
 import com.google.gson.GsonBuilder;
+
+import java.util.Map;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.FieldMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -47,6 +51,13 @@ public class ApiManager {
     public Observable<retrofit2.Response<Response<Category>>> loadCategories() {
         return mApiService.loadCategories(ApiSettings.ETSY_API_KEY)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<retrofit2.Response<Response<Product>>> loadProducts(Map<String, String> querydMap) {
+        querydMap.put(ApiSettings.API_KEY, ApiSettings.ETSY_API_KEY);
+        querydMap.put(ApiSettings.INCLUDES, ApiSettings.IMAGES);
+        return mApiService.loadProducts(querydMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

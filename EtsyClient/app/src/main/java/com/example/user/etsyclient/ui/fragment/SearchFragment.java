@@ -1,6 +1,7 @@
 package com.example.user.etsyclient.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.contract.CategoriesContract;
 import com.example.user.etsyclient.model.Category;
+import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.presentor.CategoriesPresenter;
+import com.example.user.etsyclient.ui.activity.ProductsListActivity;
 
 import java.util.List;
 
@@ -31,6 +35,10 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     private List<Category> mCategories;
     private Spinner mSpinner;
     private Context mContext;
+    private EditText mKeyWordsET;
+    public static final String CATEGORY_EXTRA_KEY = "category";
+    public static final String KEYWORD_EXTRA_KEY = "keywords";
+    public static final String BUNDLE_EXTRA_KEY = "bundle";
 
     @Nullable
     @Override
@@ -44,9 +52,11 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     }
 
     private void initViews(View view) {
-        initFab(view);
         mSpinner = (Spinner) view.findViewById(R.id.spinner);
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
+        mKeyWordsET = (EditText) view.findViewById(R.id.key_words_edit_text);
+        initFab(view);
+
     }
 
 
@@ -55,11 +65,23 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Category category =(Category) mSpinner.getSelectedItem();
+
+                startActivity(prepareIntent());
+
             }
         });
     }
 
+    private Intent prepareIntent() {
+        String categoryName = ((Category) mSpinner.getSelectedItem()).getName();
+        String keyWord = mKeyWordsET.getText().toString();
+        Bundle extras = new Bundle();
+        extras.putString(CATEGORY_EXTRA_KEY, categoryName);
+        extras.putString(KEYWORD_EXTRA_KEY, keyWord);
+        Intent intent = new Intent(mContext, ProductsListActivity.class);
+        intent.putExtra(BUNDLE_EXTRA_KEY,extras);
+        return intent;
+    }
 
     @Override
     public void onError(String message) {
@@ -74,9 +96,16 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         mSpinner.setAdapter(arrayAdapter);
     }
 
+
     @Override
     public Context getContext() {
         mContext = super.getContext();
         return mContext;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mCategoriesPresenter.detachView();
     }
 }
