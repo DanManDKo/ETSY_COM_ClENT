@@ -65,7 +65,8 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (mSpinner.getCount() == 0)
+                    return;
                 startActivity(prepareIntent());
 
             }
@@ -79,7 +80,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         extras.putString(CATEGORY_EXTRA_KEY, categoryName);
         extras.putString(KEYWORD_EXTRA_KEY, keyWord);
         Intent intent = new Intent(mContext, ProductsListActivity.class);
-        intent.putExtra(BUNDLE_EXTRA_KEY,extras);
+        intent.putExtra(BUNDLE_EXTRA_KEY, extras);
         return intent;
     }
 

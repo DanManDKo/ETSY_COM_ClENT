@@ -3,6 +3,7 @@ package com.example.user.etsyclient.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.DisplayMetrics;
 
 /**
  * Created by User on 29.12.2016.
@@ -19,4 +20,5 @@ public class Network {
         }
         return isAvailable;
     }
+
 }

@@ -21,17 +21,19 @@ public class ProductsPresenter implements ProductsContract.Presenter {
     private ProductsContract.View mView;
     public static final String CATEGORY = "category";
     public static final String KEY_WORDS = "keywords";
+    public static final String PAGE = "page";
 
-    public void loadProductsFromNetwork(String categoryName, String keyWords) {
+    public void loadProductsFromNetwork(String categoryName, String keyWords, Integer page) {
         if (!isOnline()) {
             mView.onError(mView.getContext().getString(R.string.no_connection));
             return;
         }
-        Map<String, String> fieldMap = new HashMap<>();
-        fieldMap.put(CATEGORY, categoryName);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put(CATEGORY, categoryName);
+        queryMap.put(PAGE, page.toString());
         if (keyWords != null && !keyWords.isEmpty())
-            fieldMap.put(KEY_WORDS, keyWords);
-        App.getApiManager().loadProducts(fieldMap).subscribe(new Subscriber<retrofit2.Response<Response<Product>>>() {
+            queryMap.put(KEY_WORDS, keyWords);
+        App.getApiManager().loadProducts(queryMap).subscribe(new Subscriber<retrofit2.Response<Response<Product>>>() {
             @Override
             public void onCompleted() {
 

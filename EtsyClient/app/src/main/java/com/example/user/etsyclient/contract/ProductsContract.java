@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProductsContract {
     public interface Presenter extends BaseMvpPresenter<View> {
-        void loadProductsFromNetwork(String categoryName, String keyWords);
+        void loadProductsFromNetwork(String categoryName, String keyWords, Integer page);
 
         boolean isOnline();
     }
