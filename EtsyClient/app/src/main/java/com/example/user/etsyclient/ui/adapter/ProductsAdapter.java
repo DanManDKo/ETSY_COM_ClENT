@@ -35,8 +35,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        int w = holder.mPreview.getWidth();
-        int h = holder.mPreview.getHeight();
         Picasso.with(holder.itemView.getContext())
                 .load(mProducts.get(position)
                         .getImages().get(FIRST_IMAGE)
@@ -45,14 +43,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                 .into(holder.mPreview);
         holder.mName.setText(mProducts.get(position).getTitle());
 
-        if (mOnClickCallBack != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mOnClickCallBack.onItemClick(mProducts.get(position));
                 }
             });
-        }
     }
 
     @Override

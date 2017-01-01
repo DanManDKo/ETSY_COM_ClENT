@@ -1,12 +1,15 @@
 package com.example.user.etsyclient.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by User on 29.12.2016.
  */
 
-public class Image {
+public class Image implements Parcelable {
     @SerializedName("listing_image_id")
     private String listingImageId;
     @SerializedName("hex_code")
@@ -43,6 +46,66 @@ public class Image {
     private String fullHeight;
     @SerializedName("full_width")
     private String fullWidth;
+
+    protected Image(Parcel in) {
+        listingImageId = in.readString();
+        hexCode = in.readString();
+        red = in.readString();
+        green = in.readString();
+        blue = in.readString();
+        hue = in.readString();
+        saturation = in.readString();
+        brightness = in.readString();
+        blackAndWhite = in.readString();
+        creationTsz = in.readString();
+        productId = in.readString();
+        rank = in.readString();
+        url75x75 = in.readString();
+        url170x135 = in.readString();
+        url570xN = in.readString();
+        urlFullxFull = in.readString();
+        fullHeight = in.readString();
+        fullWidth = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(listingImageId);
+        dest.writeString(hexCode);
+        dest.writeString(red);
+        dest.writeString(green);
+        dest.writeString(blue);
+        dest.writeString(hue);
+        dest.writeString(saturation);
+        dest.writeString(brightness);
+        dest.writeString(blackAndWhite);
+        dest.writeString(creationTsz);
+        dest.writeString(productId);
+        dest.writeString(rank);
+        dest.writeString(url75x75);
+        dest.writeString(url170x135);
+        dest.writeString(url570xN);
+        dest.writeString(urlFullxFull);
+        dest.writeString(fullHeight);
+        dest.writeString(fullWidth);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Image> CREATOR = new Creator<Image>() {
+        @Override
+        public Image createFromParcel(Parcel in) {
+            return new Image(in);
+        }
+
+        @Override
+        public Image[] newArray(int size) {
+            return new Image[size];
+        }
+    };
 
     public String getListingImageId() {
         return listingImageId;

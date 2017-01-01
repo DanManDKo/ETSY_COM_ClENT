@@ -2,6 +2,7 @@ package com.example.user.etsyclient.presentor;
 
 import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.R;
+import com.example.user.etsyclient.api.ApiSettings;
 import com.example.user.etsyclient.contract.ProductsContract;
 import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.model.Response;
@@ -19,9 +20,6 @@ import rx.Subscriber;
 
 public class ProductsPresenter implements ProductsContract.Presenter {
     private ProductsContract.View mView;
-    public static final String CATEGORY = "category";
-    public static final String KEY_WORDS = "keywords";
-    public static final String PAGE = "page";
 
     public void loadProductsFromNetwork(String categoryName, String keyWords, Integer page) {
         if (!isOnline()) {
@@ -29,10 +27,10 @@ public class ProductsPresenter implements ProductsContract.Presenter {
             return;
         }
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put(CATEGORY, categoryName);
-        queryMap.put(PAGE, page.toString());
+        queryMap.put(ApiSettings.CATEGORY, categoryName);
+        queryMap.put(ApiSettings.PAGE, page.toString());
         if (keyWords != null && !keyWords.isEmpty())
-            queryMap.put(KEY_WORDS, keyWords);
+            queryMap.put(ApiSettings.KEYWORDS, keyWords);
         App.getApiManager().loadProducts(queryMap).subscribe(new Subscriber<retrofit2.Response<Response<Product>>>() {
             @Override
             public void onCompleted() {

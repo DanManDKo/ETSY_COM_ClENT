@@ -54,10 +54,10 @@ public class ApiManager {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<retrofit2.Response<Response<Product>>> loadProducts(Map<String, String> querydMap) {
-        querydMap.put(ApiSettings.API_KEY, ApiSettings.ETSY_API_KEY);
-        querydMap.put(ApiSettings.INCLUDES, ApiSettings.IMAGES);
-        return mApiService.loadProducts(querydMap).subscribeOn(Schedulers.io())
+    public Observable<retrofit2.Response<Response<Product>>> loadProducts(Map<String, String> queryMap) {
+        queryMap.put(ApiSettings.API_KEY, ApiSettings.ETSY_API_KEY);
+        queryMap.put(ApiSettings.INCLUDES, ApiSettings.IMAGES);
+        return mApiService.loadProducts(queryMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

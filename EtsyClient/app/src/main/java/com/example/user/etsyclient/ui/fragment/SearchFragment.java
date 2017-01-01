@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.example.user.etsyclient.R;
@@ -36,6 +37,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     private Spinner mSpinner;
     private Context mContext;
     private EditText mKeyWordsET;
+    private ProgressBar mProgressBar;
     public static final String CATEGORY_EXTRA_KEY = "category";
     public static final String KEYWORD_EXTRA_KEY = "keywords";
     public static final String BUNDLE_EXTRA_KEY = "bundle";
@@ -55,6 +57,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         mSpinner = (Spinner) view.findViewById(R.id.spinner);
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
         mKeyWordsET = (EditText) view.findViewById(R.id.key_words_edit_text);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar_search_fragment);
         initFab(view);
 
     }
@@ -95,6 +98,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         ArrayAdapter<Category> arrayAdapter = new ArrayAdapter<Category>(mContext,
                 android.R.layout.simple_spinner_item, mCategories);
         mSpinner.setAdapter(arrayAdapter);
+        mProgressBar.setVisibility(View.GONE);
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.user.etsyclient.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -39,6 +40,7 @@ public class ProductsListActivity extends AppCompatActivity implements ProductsC
     private ProductsAdapter mAdapter;
     private final int FIRST_PAGE = 1;
     private final int SPAN_WIDTH = 100;
+    public static final String PRODUCT_EXTRA_KEY = "product";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class ProductsListActivity extends AppCompatActivity implements ProductsC
     private void initRecycler() {
         mRecyclerView = (RecyclerView) findViewById(R.id.products_recycler);
         mAdapter = new ProductsAdapter(mProducts);
+        mAdapter.setOnClickCallBack(this);
         mRecyclerView.setAdapter(mAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, calculateSpanCount());
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -95,6 +98,7 @@ public class ProductsListActivity extends AppCompatActivity implements ProductsC
         mToolbar = (Toolbar) findViewById(R.id.toolbar_products_list);
         mToolbar.setTitle(R.string.products_list);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -123,6 +127,8 @@ public class ProductsListActivity extends AppCompatActivity implements ProductsC
 
     @Override
     public void onItemClick(Product product) {
-
+        Intent intent = new Intent(this,DetailProductActivity.class);
+        intent.putExtra(PRODUCT_EXTRA_KEY,product);
+        startActivity(intent);
     }
 }

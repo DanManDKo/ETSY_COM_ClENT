@@ -1,5 +1,8 @@
 package com.example.user.etsyclient.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by User on 29.12.2016.
  */
 
-public class Product {
+public class Product implements Parcelable {
     @SerializedName("listing_id")
     private String productId;
     @SerializedName("state")
@@ -29,6 +32,50 @@ public class Product {
     private String itemWeight;
     @SerializedName("Images")
     private List<Image> images;
+
+    protected Product(Parcel in) {
+        productId = in.readString();
+        state = in.readString();
+        categoryId = in.readString();
+        title = in.readString();
+        description = in.readString();
+        price = in.readString();
+        currencyCode = in.readString();
+        quantity = in.readString();
+        itemWeight = in.readString();
+        images = in.createTypedArrayList(Image.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(productId);
+        dest.writeString(state);
+        dest.writeString(categoryId);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(price);
+        dest.writeString(currencyCode);
+        dest.writeString(quantity);
+        dest.writeString(itemWeight);
+        dest.writeTypedList(images);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public String getProductId() {
         return productId;
