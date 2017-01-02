@@ -64,9 +64,8 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
         mPrice = (TextView) findViewById(R.id.tv_price);
         mCurrencyCode = (TextView) findViewById(R.id.tv_currency_code);
         mDescription = (TextView) findViewById(R.id.tv_description);
-
         mTitle.setText(mProduct.getTitle());
-        mPrice.setText(mProduct.getPrice());
+        mPrice.setText(Double.toString(mProduct.getPrice()));
         mCurrencyCode.setText(mProduct.getCurrencyCode());
         mDescription.setText(mProduct.getDescription());
 
@@ -78,6 +77,7 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
             @Override
             public void onClick(View v) {
                 mDbManager.addProduct(mProduct);
+                mDbManager.getAllProducts();
             }
         });
     }
@@ -101,9 +101,9 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
             try {
                 image = mProduct.getImages().get(FIRST_IMAGE);
                 int colorOfToolbar = Color.rgb(
-                        Integer.parseInt(image.getRed()),
-                        Integer.parseInt(image.getGreen()),
-                        Integer.parseInt(image.getBlue()));
+                        image.getRed(),
+                        image.getGreen(),
+                        image.getBlue());
                 mToolbar.setBackgroundColor(colorOfToolbar);
             } catch (ParseException ex) {
                 Log.e(ERROR_TAG, ex.getMessage());

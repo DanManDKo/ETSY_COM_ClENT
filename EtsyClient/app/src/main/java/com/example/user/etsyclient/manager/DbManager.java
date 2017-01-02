@@ -2,6 +2,7 @@ package com.example.user.etsyclient.manager;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.user.etsyclient.db.DbContract;
@@ -10,6 +11,7 @@ import com.example.user.etsyclient.db.DbHelper;
 import com.example.user.etsyclient.model.Image;
 import com.example.user.etsyclient.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,23 +29,96 @@ public class DbManager implements DbHandler {
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+        Cursor cursor = mDatabase.query(DbContract.ProductsHelper.TABLE_PRODUCTS,
+                null, null, null, null, null, null);
+        List<Product> products = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                products.add(getProduct(cursor));
+            } while (cursor.moveToNext());
+
+        }
+        cursor.close();
+        return products;
+    }
+
+    private List<Image> getImagesOfCurrentProduct(long productId) {
+        List<Image> images = new ArrayList<>();
+        String query = Long.toString(productId);
+        Cursor cursor = mDatabase.query(DbContract.ImagesHelper.TABLE_IMAGES, null,
+                DbContract.ImagesHelper.COLUMN_PRODUCT_ID + " = ?",
+                new String[]{query},
+                null,
+                null,
+                null
+        );
+        if (cursor.moveToFirst()) {
+            do {
+                images.add(getImage(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return images;
+
+    }
+
+    private Image getImage(Cursor cursor) {
+        Image image = new Image();
+        image.setImageId(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_IMAGE_ID)));
+        image.setHexCode(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_IMAGE_ID)));
+        image.setRed(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_RED)));
+        image.setGreen(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_GREEN)));
+        image.setBlue(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_BLUE)));
+        image.setHue(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_HUE)));
+        image.setSaturation(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_SATURATION)));
+        image.setBrightness(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_BRIGHTNESS)));
+        image.setBrightness(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_BRIGHTNESS)));
+        image.setBlackAndWhite(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_BRIGHTNESS)) == 1 ? true : false);
+        image.setCreationTsz(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_CREATION_TSZ)));
+        image.setProductId(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_PRODUCT_ID)));
+        image.setRank(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_RANK)));
+        image.setRank(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_RANK)));
+        image.setUrl75x75(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_URL_75x75)));
+        image.setUrl170x135(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_URL_170x135)));
+        image.setUrl570xN(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_URL_570xN)));
+        image.setUrlFullxFull(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_URL_FULLxFULL)));
+        image.setFullHeight(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_FULL_HEIGHT)));
+        image.setFullWidth(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_FULL_WIDTH)));
+
+        return image;
+    }
+
+    private Product getProduct(Cursor cursor) {
+        Product product = new Product();
+
+        product.setProductId(cursor.getInt(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_PRODUCT_ID)));
+        product.setState(cursor.getString(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_STATE)));
+        product.setCategoryId(cursor.getInt(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_CATEGORY_ID)));
+        product.setTitle(cursor.getString(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_TITLE)));
+        product.setDescription(cursor.getString(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_DESCRIPTION)));
+        product.setPrice(cursor.getDouble(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_PRICE)));
+        product.setCurrencyCode(cursor.getString(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_CURRENCY_CODE)));
+        product.setQuantity(cursor.getInt(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_QUANTITY)));
+        product.setItemWeight(cursor.getInt(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_ITEM_WEIGHT)));
+        product.setImages(getImagesOfCurrentProduct(product.getProductId()));
+
+        return product;
     }
 
     @Override
     public long addProduct(Product product) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DbContract.ProductsHelper.COLUMN_PRODUCT_ID, Integer.parseInt(product.getProductId()));
+
+        contentValues.put(DbContract.ProductsHelper.COLUMN_PRODUCT_ID, (int) product.getProductId());
         contentValues.put(DbContract.ProductsHelper.COLUMN_STATE, product.getState());
-        contentValues.put(DbContract.ProductsHelper.COLUMN_CATEGORY_ID, Integer.parseInt(product.getCategoryId()));
+        contentValues.put(DbContract.ProductsHelper.COLUMN_CATEGORY_ID, (int) product.getCategoryId());
         contentValues.put(DbContract.ProductsHelper.COLUMN_TITLE, product.getTitle());
         contentValues.put(DbContract.ProductsHelper.COLUMN_DESCRIPTION, product.getDescription());
-        contentValues.put(DbContract.ProductsHelper.COLUMN_PRICE, Double.parseDouble(product.getPrice()));
+        contentValues.put(DbContract.ProductsHelper.COLUMN_PRICE, product.getPrice());
         contentValues.put(DbContract.ProductsHelper.COLUMN_CURRENCY_CODE, product.getCurrencyCode());
-        if (product.getQuantity() != null)
-            contentValues.put(DbContract.ProductsHelper.COLUMN_QUANTITY, Integer.parseInt(product.getQuantity()));
-        if (product.getItemWeight() != null)
-            contentValues.put(DbContract.ProductsHelper.COLUMN_ITEM_WEIGHT, Double.parseDouble(product.getItemWeight()));
+        contentValues.put(DbContract.ProductsHelper.COLUMN_QUANTITY, product.getQuantity());
+        contentValues.put(DbContract.ProductsHelper.COLUMN_ITEM_WEIGHT, product.getItemWeight());
+
         long rowNumber = mDatabase.insert(DbContract.ProductsHelper.TABLE_PRODUCTS, null, contentValues);
         addImages(product.getImages());
         return rowNumber;
@@ -53,47 +128,30 @@ public class DbManager implements DbHandler {
         ContentValues contentValues;
         for (Image image : images) {
             contentValues = new ContentValues();
-            contentValues.put(DbContract.ImagesHelper.COLUMN_IMAGE_ID, Integer.parseInt(image.getImageId()));
-            if (image.getHexCode() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_HEX_CODE, image.getHexCode());
-            if (image.getRed() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_RED, Integer.parseInt(image.getRed()));
-            if (image.getGreen() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_GREEN, Integer.parseInt(image.getGreen()));
-            if (image.getBlue() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_BLUE, Integer.parseInt(image.getBlue()));
-            if (image.getHue() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_HUE, Integer.parseInt(image.getHue()));
-            if (image.getSaturation() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_SATURATION, Integer.parseInt(image.getSaturation()));
-            if (image.getBrightness() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_BRIGHTNESS, Integer.parseInt(image.getBrightness()));
-            contentValues.put(DbContract.ImagesHelper.COLUMN_IS_BLACK_AND_WHITE, "true".equals(image.getBlackAndWhite()) ? 1 : 0);
-            if (image.getCreationTsz() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_CREATION_TSZ, Integer.parseInt(image.getCreationTsz()));
-            if (image.getRank() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_RANK, Integer.parseInt(image.getRank()));
+
+            contentValues.put(DbContract.ImagesHelper.COLUMN_IMAGE_ID, (int) image.getImageId());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_PRODUCT_ID, (int) image.getProductId());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_HEX_CODE, image.getHexCode());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_RED, image.getRed());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_GREEN, image.getGreen());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_BLUE, image.getBlue());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_HUE, image.getHue());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_SATURATION, image.getSaturation());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_BRIGHTNESS, image.getBrightness());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_IS_BLACK_AND_WHITE, image.getBlackAndWhite() ? 1 : 0);
+            contentValues.put(DbContract.ImagesHelper.COLUMN_CREATION_TSZ, image.getCreationTsz());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_RANK, image.getRank());
             contentValues.put(DbContract.ImagesHelper.COLUMN_URL_75x75, image.getUrl75x75());
             contentValues.put(DbContract.ImagesHelper.COLUMN_URL_170x135, image.getUrl170x135());
             contentValues.put(DbContract.ImagesHelper.COLUMN_URL_570xN, image.getUrl570xN());
             contentValues.put(DbContract.ImagesHelper.COLUMN_URL_FULLxFULL, image.getUrlFullxFull());
-            if (image.getFullHeight() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_FULL_HEIGHT, Integer.parseInt(image.getFullHeight()));
-            if (image.getFullWidth() != null)
-                contentValues.put(DbContract.ImagesHelper.COLUMN_FULL_WIDTH, Integer.parseInt(image.getFullWidth()));
+            contentValues.put(DbContract.ImagesHelper.COLUMN_FULL_HEIGHT, image.getFullHeight());
+            contentValues.put(DbContract.ImagesHelper.COLUMN_FULL_WIDTH, image.getFullWidth());
             mDatabase.insert(DbContract.ImagesHelper.TABLE_IMAGES, null, contentValues);
         }
 
 
     }
 
-    @Override
-    public boolean isFavorite(Product product) {
-        return false;
-    }
 
-    @Override
-    public List<Image> getImages(Product product) {
-        return null;
-    }
 }

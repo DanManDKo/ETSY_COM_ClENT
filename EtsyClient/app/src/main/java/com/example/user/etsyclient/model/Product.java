@@ -13,50 +13,50 @@ import java.util.List;
 
 public class Product implements Parcelable {
     @SerializedName("listing_id")
-    private String productId;
+    private long productId;
     @SerializedName("state")
     private String state;
     @SerializedName("category_id")
-    private String categoryId;
+    private long categoryId;
     @SerializedName("title")
     private String title;
     @SerializedName("description")
     private String description;
     @SerializedName("price")
-    private String price;
+    private double price;
     @SerializedName("currency_code")
     private String currencyCode;
     @SerializedName("quantity")
-    private String quantity;
+    private int quantity;
     @SerializedName("item_weight")
-    private String itemWeight;
+    private double itemWeight;
     @SerializedName("Images")
     private List<Image> images;
-
+    public Product(){}
     protected Product(Parcel in) {
-        productId = in.readString();
+        productId = in.readLong();
         state = in.readString();
-        categoryId = in.readString();
+        categoryId = in.readLong();
         title = in.readString();
         description = in.readString();
-        price = in.readString();
+        price = in.readDouble();
         currencyCode = in.readString();
-        quantity = in.readString();
-        itemWeight = in.readString();
+        quantity = in.readInt();
+        itemWeight = in.readDouble();
         images = in.createTypedArrayList(Image.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(productId);
+        dest.writeLong(productId);
         dest.writeString(state);
-        dest.writeString(categoryId);
+        dest.writeLong(categoryId);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeString(price);
+        dest.writeDouble(price);
         dest.writeString(currencyCode);
-        dest.writeString(quantity);
-        dest.writeString(itemWeight);
+        dest.writeInt(quantity);
+        dest.writeDouble(itemWeight);
         dest.writeTypedList(images);
     }
 
@@ -77,11 +77,11 @@ public class Product implements Parcelable {
         }
     };
 
-    public String getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 
@@ -93,11 +93,11 @@ public class Product implements Parcelable {
         this.state = state;
     }
 
-    public String getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -117,11 +117,11 @@ public class Product implements Parcelable {
         this.description = description;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -133,19 +133,19 @@ public class Product implements Parcelable {
         this.currencyCode = currencyCode;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public String getItemWeight() {
+    public double getItemWeight() {
         return itemWeight;
     }
 
-    public void setItemWeight(String itemWeight) {
+    public void setItemWeight(double itemWeight) {
         this.itemWeight = itemWeight;
     }
 

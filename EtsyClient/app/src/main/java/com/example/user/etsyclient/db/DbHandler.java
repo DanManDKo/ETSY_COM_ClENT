@@ -14,7 +14,5 @@ public interface DbHandler {
 
     long addProduct(Product product);
 
-    boolean isFavorite(Product product);
 
-    List<Image> getImages(Product product);
 }

@@ -11,29 +11,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class Image implements Parcelable {
     @SerializedName("listing_image_id")
-    private String imageId;
+    private long imageId;
     @SerializedName("hex_code")
     private String hexCode;
     @SerializedName("red")
-    private String red;
+    private int red;
     @SerializedName("green")
-    private String green;
+    private int green;
     @SerializedName("blue")
-    private String blue;
+    private int blue;
     @SerializedName("hue")
-    private String hue;
+    private int hue;
     @SerializedName("saturation")
-    private String saturation;
+    private int saturation;
     @SerializedName("brightness")
-    private String brightness;
+    private int brightness;
     @SerializedName("is_black_and_white")
-    private String blackAndWhite;
+    private boolean blackAndWhite;
     @SerializedName("creation_tsz")
-    private String creationTsz;
+    private int creationTsz;
     @SerializedName("listing_id")
-    private String productId;
+    private long productId;
     @SerializedName("rank")
-    private String rank;
+    private int rank;
     @SerializedName("url_75x75")
     private String url75x75;
     @SerializedName("url_170x135")
@@ -43,51 +43,51 @@ public class Image implements Parcelable {
     @SerializedName("url_fullxfull")
     private String urlFullxFull;
     @SerializedName("full_height")
-    private String fullHeight;
+    private int fullHeight;
     @SerializedName("full_width")
-    private String fullWidth;
-
+    private int fullWidth;
+    public Image(){}
     protected Image(Parcel in) {
-        imageId = in.readString();
+        imageId = in.readLong();
         hexCode = in.readString();
-        red = in.readString();
-        green = in.readString();
-        blue = in.readString();
-        hue = in.readString();
-        saturation = in.readString();
-        brightness = in.readString();
-        blackAndWhite = in.readString();
-        creationTsz = in.readString();
-        productId = in.readString();
-        rank = in.readString();
+        red = in.readInt();
+        green = in.readInt();
+        blue = in.readInt();
+        hue = in.readInt();
+        saturation = in.readInt();
+        brightness = in.readInt();
+        blackAndWhite = in.readByte() != 0;
+        creationTsz = in.readInt();
+        productId = in.readLong();
+        rank = in.readInt();
         url75x75 = in.readString();
         url170x135 = in.readString();
         url570xN = in.readString();
         urlFullxFull = in.readString();
-        fullHeight = in.readString();
-        fullWidth = in.readString();
+        fullHeight = in.readInt();
+        fullWidth = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(imageId);
+        dest.writeLong(imageId);
         dest.writeString(hexCode);
-        dest.writeString(red);
-        dest.writeString(green);
-        dest.writeString(blue);
-        dest.writeString(hue);
-        dest.writeString(saturation);
-        dest.writeString(brightness);
-        dest.writeString(blackAndWhite);
-        dest.writeString(creationTsz);
-        dest.writeString(productId);
-        dest.writeString(rank);
+        dest.writeInt(red);
+        dest.writeInt(green);
+        dest.writeInt(blue);
+        dest.writeInt(hue);
+        dest.writeInt(saturation);
+        dest.writeInt(brightness);
+        dest.writeByte((byte) (blackAndWhite ? 1 : 0));
+        dest.writeInt(creationTsz);
+        dest.writeLong(productId);
+        dest.writeInt(rank);
         dest.writeString(url75x75);
         dest.writeString(url170x135);
         dest.writeString(url570xN);
         dest.writeString(urlFullxFull);
-        dest.writeString(fullHeight);
-        dest.writeString(fullWidth);
+        dest.writeInt(fullHeight);
+        dest.writeInt(fullWidth);
     }
 
     @Override
@@ -107,11 +107,11 @@ public class Image implements Parcelable {
         }
     };
 
-    public String getImageId() {
+    public long getImageId() {
         return imageId;
     }
 
-    public void setImageId(String imageId) {
+    public void setImageId(long imageId) {
         this.imageId = imageId;
     }
 
@@ -123,83 +123,83 @@ public class Image implements Parcelable {
         this.hexCode = hexCode;
     }
 
-    public String getRed() {
+    public int getRed() {
         return red;
     }
 
-    public void setRed(String red) {
+    public void setRed(int red) {
         this.red = red;
     }
 
-    public String getGreen() {
+    public int getGreen() {
         return green;
     }
 
-    public void setGreen(String green) {
+    public void setGreen(int green) {
         this.green = green;
     }
 
-    public String getBlue() {
+    public int getBlue() {
         return blue;
     }
 
-    public void setBlue(String blue) {
+    public void setBlue(int blue) {
         this.blue = blue;
     }
 
-    public String getHue() {
+    public int getHue() {
         return hue;
     }
 
-    public void setHue(String hue) {
+    public void setHue(int hue) {
         this.hue = hue;
     }
 
-    public String getSaturation() {
+    public int getSaturation() {
         return saturation;
     }
 
-    public void setSaturation(String saturation) {
+    public void setSaturation(int saturation) {
         this.saturation = saturation;
     }
 
-    public String getBrightness() {
+    public int getBrightness() {
         return brightness;
     }
 
-    public void setBrightness(String brightness) {
+    public void setBrightness(int brightness) {
         this.brightness = brightness;
     }
 
-    public String getBlackAndWhite() {
+    public boolean getBlackAndWhite() {
         return blackAndWhite;
     }
 
-    public void setBlackAndWhite(String blackAndWhite) {
+    public void setBlackAndWhite(boolean blackAndWhite) {
         this.blackAndWhite = blackAndWhite;
     }
 
-    public String getCreationTsz() {
+    public int getCreationTsz() {
         return creationTsz;
     }
 
-    public void setCreationTsz(String creationTsz) {
+    public void setCreationTsz(int creationTsz) {
         this.creationTsz = creationTsz;
     }
 
-    public String getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 
-    public String getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public void setRank(String rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
@@ -235,19 +235,19 @@ public class Image implements Parcelable {
         this.urlFullxFull = urlFullxFull;
     }
 
-    public String getFullHeight() {
+    public int getFullHeight() {
         return fullHeight;
     }
 
-    public void setFullHeight(String fullHeight) {
+    public void setFullHeight(int fullHeight) {
         this.fullHeight = fullHeight;
     }
 
-    public String getFullWidth() {
+    public int getFullWidth() {
         return fullWidth;
     }
 
-    public void setFullWidth(String fullWidth) {
+    public void setFullWidth(int fullWidth) {
         this.fullWidth = fullWidth;
     }
 }
