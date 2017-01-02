@@ -19,6 +19,8 @@ import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.ui.adapter.ImageAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
+
 /**
  * Created by User on 01.01.2017.
  */
@@ -36,8 +38,9 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     private CirclePageIndicator mCirclePageIndicator;
     private final String ERROR_TAG = "DetailProduct";
     private final int OFF_SCREEN_PAGE_LIMIT = 1;
-    private final String POSITION = "position";
-
+    public static final String POSITION = "position";
+    public static final String IMAGES = "images";
+    private static final int FIRST_IMAGE=0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,7 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
         Image image;
         if (mProduct != null && mProduct.getImages() != null && !mProduct.getImages().isEmpty()) {
             try {
-                image = mProduct.getImages().get(0);
+                image = mProduct.getImages().get(FIRST_IMAGE);
                 int colorOfToolbar = Color.rgb(
                         Integer.parseInt(image.getRed()),
                         Integer.parseInt(image.getGreen()),
@@ -107,7 +110,8 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(this, GalleryActivity.class);
-        intent.putExtra(ProductsListActivity.PRODUCT_EXTRA_KEY, mProduct);
+        ArrayList<Image> images = (ArrayList<Image>) mProduct.getImages();
+        intent.putParcelableArrayListExtra(IMAGES, images);
         intent.putExtra(POSITION, position);
         startActivity(intent);
     }
