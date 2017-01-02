@@ -10,10 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.R;
+import com.example.user.etsyclient.manager.DbManager;
 import com.example.user.etsyclient.model.Image;
 import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.ui.adapter.ImageAdapter;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
  */
 
 public class DetailProductActivity extends AppCompatActivity implements ImageAdapter.OnItemClickCallBack {
+    private DbManager mDbManager;
     private Product mProduct;
     private Toolbar mToolbar;
     private ViewPager mViewPager;
@@ -40,12 +44,14 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     private final int OFF_SCREEN_PAGE_LIMIT = 1;
     public static final String POSITION = "position";
     public static final String IMAGES = "images";
-    private static final int FIRST_IMAGE=0;
+    private static final int FIRST_IMAGE = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_product_activity);
         mProduct = getIntent().getParcelableExtra(ProductsListActivity.PRODUCT_EXTRA_KEY);
+        mDbManager = App.getDbManager(this);
         initViews();
 
     }
@@ -53,17 +59,27 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     private void initViews() {
         initToolbar();
         initViewPager();
+        initFavorite();
         mTitle = (TextView) findViewById(R.id.tv_title);
         mPrice = (TextView) findViewById(R.id.tv_price);
         mCurrencyCode = (TextView) findViewById(R.id.tv_currency_code);
         mDescription = (TextView) findViewById(R.id.tv_description);
-        mFavoriteImageView = (ImageView) findViewById(R.id.iv_favorite);
 
         mTitle.setText(mProduct.getTitle());
         mPrice.setText(mProduct.getPrice());
         mCurrencyCode.setText(mProduct.getCurrencyCode());
         mDescription.setText(mProduct.getDescription());
 
+    }
+
+    private void initFavorite() {
+        mFavoriteImageView = (ImageView) findViewById(R.id.iv_favorite);
+        mFavoriteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDbManager.addProduct(mProduct);
+            }
+        });
     }
 
     private void initViewPager() {

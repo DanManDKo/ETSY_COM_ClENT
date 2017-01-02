@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Image implements Parcelable {
     @SerializedName("listing_image_id")
-    private String listingImageId;
+    private String imageId;
     @SerializedName("hex_code")
     private String hexCode;
     @SerializedName("red")
@@ -48,7 +48,7 @@ public class Image implements Parcelable {
     private String fullWidth;
 
     protected Image(Parcel in) {
-        listingImageId = in.readString();
+        imageId = in.readString();
         hexCode = in.readString();
         red = in.readString();
         green = in.readString();
@@ -70,7 +70,7 @@ public class Image implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(listingImageId);
+        dest.writeString(imageId);
         dest.writeString(hexCode);
         dest.writeString(red);
         dest.writeString(green);
@@ -107,12 +107,12 @@ public class Image implements Parcelable {
         }
     };
 
-    public String getListingImageId() {
-        return listingImageId;
+    public String getImageId() {
+        return imageId;
     }
 
-    public void setListingImageId(String listingImageId) {
-        this.listingImageId = listingImageId;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getHexCode() {
