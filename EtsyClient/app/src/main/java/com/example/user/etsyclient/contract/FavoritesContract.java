@@ -8,18 +8,16 @@ import com.example.user.etsyclient.presenter.BaseMvpPresenter;
 import java.util.List;
 
 /**
- * Created by User on 29.12.2016.
+ * Created by User on 03.01.2017.
  */
 
-public class ProductsContract {
-    public interface Presenter extends BaseMvpPresenter<View> {
-        void loadProductsFromNetwork(String categoryName, String keyWords, Integer page);
+public class FavoritesContract {
+    public interface Presenter extends BaseMvpPresenter<FavoritesContract.View> {
+        void loadProducts();
 
-        boolean isOnline();
     }
     public interface View {
 
-        void onError(String message);
 
         void onProductsLoaded(List<Product> products);
 
@@ -27,5 +25,4 @@ public class ProductsContract {
         Context getContext();
 
     }
-
 }

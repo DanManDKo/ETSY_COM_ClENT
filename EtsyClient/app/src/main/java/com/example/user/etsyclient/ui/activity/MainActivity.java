@@ -2,7 +2,6 @@ package com.example.user.etsyclient.ui.activity;
 
 import android.os.Bundle;
 
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,8 +16,7 @@ import android.view.MenuItem;
 
 import com.example.user.etsyclient.R;
 
-import com.example.user.etsyclient.contract.CategoriesContract;
-import com.example.user.etsyclient.presentor.CategoriesPresenter;
+import com.example.user.etsyclient.presenter.CategoriesPresenter;
 import com.example.user.etsyclient.ui.adapter.ViewPagerAdapterMain;
 import com.example.user.etsyclient.ui.fragment.FavoritesListFragment;
 import com.example.user.etsyclient.ui.fragment.SearchFragment;

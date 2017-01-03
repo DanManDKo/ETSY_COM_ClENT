@@ -1,6 +1,5 @@
 package com.example.user.etsyclient.db;
 
-import com.example.user.etsyclient.model.Image;
 import com.example.user.etsyclient.model.Product;
 
 import java.util.List;
@@ -14,5 +13,5 @@ public interface DbHandler {
 
     long addProduct(Product product);
 
-
+    void deleteAll();
 }

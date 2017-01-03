@@ -250,4 +250,58 @@ public class Image implements Parcelable {
     public void setFullWidth(int fullWidth) {
         this.fullWidth = fullWidth;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Image image = (Image) o;
+
+        if (imageId != image.imageId) return false;
+        if (red != image.red) return false;
+        if (green != image.green) return false;
+        if (blue != image.blue) return false;
+        if (hue != image.hue) return false;
+        if (saturation != image.saturation) return false;
+        if (brightness != image.brightness) return false;
+        if (blackAndWhite != image.blackAndWhite) return false;
+        if (creationTsz != image.creationTsz) return false;
+        if (productId != image.productId) return false;
+        if (rank != image.rank) return false;
+        if (fullHeight != image.fullHeight) return false;
+        if (fullWidth != image.fullWidth) return false;
+        if (hexCode != null ? !hexCode.equals(image.hexCode) : image.hexCode != null) return false;
+        if (url75x75 != null ? !url75x75.equals(image.url75x75) : image.url75x75 != null)
+            return false;
+        if (url170x135 != null ? !url170x135.equals(image.url170x135) : image.url170x135 != null)
+            return false;
+        if (url570xN != null ? !url570xN.equals(image.url570xN) : image.url570xN != null)
+            return false;
+        return urlFullxFull != null ? urlFullxFull.equals(image.urlFullxFull) : image.urlFullxFull == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (imageId ^ (imageId >>> 32));
+        result = 31 * result + (hexCode != null ? hexCode.hashCode() : 0);
+        result = 31 * result + red;
+        result = 31 * result + green;
+        result = 31 * result + blue;
+        result = 31 * result + hue;
+        result = 31 * result + saturation;
+        result = 31 * result + brightness;
+        result = 31 * result + (blackAndWhite ? 1 : 0);
+        result = 31 * result + creationTsz;
+        result = 31 * result + (int) (productId ^ (productId >>> 32));
+        result = 31 * result + rank;
+        result = 31 * result + (url75x75 != null ? url75x75.hashCode() : 0);
+        result = 31 * result + (url170x135 != null ? url170x135.hashCode() : 0);
+        result = 31 * result + (url570xN != null ? url570xN.hashCode() : 0);
+        result = 31 * result + (urlFullxFull != null ? urlFullxFull.hashCode() : 0);
+        result = 31 * result + fullHeight;
+        result = 31 * result + fullWidth;
+        return result;
+    }
 }

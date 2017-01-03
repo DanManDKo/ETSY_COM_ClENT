@@ -156,4 +156,45 @@ public class Product implements Parcelable {
     public void setImages(List<Image> images) {
         this.images = images;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (productId != product.productId) return false;
+        if (categoryId != product.categoryId) return false;
+        if (Double.compare(product.price, price) != 0) return false;
+        if (quantity != product.quantity) return false;
+        if (Double.compare(product.itemWeight, itemWeight) != 0) return false;
+        if (state != null ? !state.equals(product.state) : product.state != null) return false;
+        if (title != null ? !title.equals(product.title) : product.title != null) return false;
+        if (description != null ? !description.equals(product.description) : product.description != null)
+            return false;
+        if (currencyCode != null ? !currencyCode.equals(product.currencyCode) : product.currencyCode != null)
+            return false;
+        return images != null ? images.equals(product.images) : product.images == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (int) (productId ^ (productId >>> 32));
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (int) (categoryId ^ (categoryId >>> 32));
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (currencyCode != null ? currencyCode.hashCode() : 0);
+        result = 31 * result + quantity;
+        temp = Double.doubleToLongBits(itemWeight);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (images != null ? images.hashCode() : 0);
+        return result;
+    }
 }

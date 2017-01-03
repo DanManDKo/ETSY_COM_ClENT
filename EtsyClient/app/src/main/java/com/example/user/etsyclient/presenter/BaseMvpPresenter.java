@@ -1,4 +1,4 @@
-package com.example.user.etsyclient.presentor;
+package com.example.user.etsyclient.presenter;
 
 /**
  * Created by User on 25.12.2016.

@@ -3,8 +3,7 @@ package com.example.user.etsyclient.contract;
 import android.content.Context;
 
 import com.example.user.etsyclient.model.Category;
-import com.example.user.etsyclient.model.Product;
-import com.example.user.etsyclient.presentor.BaseMvpPresenter;
+import com.example.user.etsyclient.presenter.BaseMvpPresenter;
 
 import java.util.List;
 

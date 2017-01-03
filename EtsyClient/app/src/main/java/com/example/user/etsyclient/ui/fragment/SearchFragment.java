@@ -19,8 +19,7 @@ import android.widget.Spinner;
 import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.contract.CategoriesContract;
 import com.example.user.etsyclient.model.Category;
-import com.example.user.etsyclient.model.Product;
-import com.example.user.etsyclient.presentor.CategoriesPresenter;
+import com.example.user.etsyclient.presenter.CategoriesPresenter;
 import com.example.user.etsyclient.ui.activity.ProductsListActivity;
 
 import java.util.List;

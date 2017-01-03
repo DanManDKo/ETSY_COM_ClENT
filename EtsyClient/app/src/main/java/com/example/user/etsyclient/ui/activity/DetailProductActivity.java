@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.manager.DbManager;
+import com.example.user.etsyclient.manager.FavoritesManager;
 import com.example.user.etsyclient.model.Image;
 import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.ui.adapter.ImageAdapter;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
  */
 
 public class DetailProductActivity extends AppCompatActivity implements ImageAdapter.OnItemClickCallBack {
-    private DbManager mDbManager;
     private Product mProduct;
     private Toolbar mToolbar;
     private ViewPager mViewPager;
@@ -45,13 +45,14 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     public static final String POSITION = "position";
     public static final String IMAGES = "images";
     private static final int FIRST_IMAGE = 0;
+    private FavoritesManager mFavoritesManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_product_activity);
+        mFavoritesManager = App.getFavoritesManager(this);
         mProduct = getIntent().getParcelableExtra(ProductsListActivity.PRODUCT_EXTRA_KEY);
-        mDbManager = App.getDbManager(this);
         initViews();
 
     }
@@ -73,11 +74,18 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
 
     private void initFavorite() {
         mFavoriteImageView = (ImageView) findViewById(R.id.iv_favorite);
+        if (mFavoritesManager.isFavorite(mProduct))
+            mFavoriteImageView.setImageResource(R.drawable.ic_favorite);
         mFavoriteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDbManager.addProduct(mProduct);
-                mDbManager.getAllProducts();
+                if (mFavoritesManager.isFavorite(mProduct)) {
+                    mFavoritesManager.removeProduct(mProduct);
+                    mFavoriteImageView.setImageResource(R.drawable.ic_not_favorite);
+                } else {
+                    mFavoriteImageView.setImageResource(R.drawable.ic_favorite);
+                    mFavoritesManager.addProduct(mProduct);
+                }
             }
         });
     }
@@ -92,6 +100,12 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
         mImageAdapter.setOnItemClickCallBack(this);
         mViewPager.setAdapter(mImageAdapter);
         mCirclePageIndicator.setViewPager(mViewPager);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mFavoritesManager.commitData();
     }
 
     private void initToolbar() {

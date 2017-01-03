@@ -1,4 +1,4 @@
-package com.example.user.etsyclient.presentor;
+package com.example.user.etsyclient.presenter;
 
 
 import com.example.user.etsyclient.App;

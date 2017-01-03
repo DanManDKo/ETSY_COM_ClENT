@@ -13,9 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.R;
+import com.example.user.etsyclient.contract.FavoritesContract;
 import com.example.user.etsyclient.model.Product;
+import com.example.user.etsyclient.presenter.FavoritesPresenter;
 import com.example.user.etsyclient.ui.activity.DetailProductActivity;
 import com.example.user.etsyclient.ui.activity.ProductsListActivity;
 import com.example.user.etsyclient.ui.adapter.ProductsAdapter;
@@ -26,11 +27,12 @@ import java.util.List;
  * Created by User on 24.12.2016.
  */
 
-public class FavoritesListFragment extends Fragment implements ProductsAdapter.OnProductClickCallBack {
+public class FavoritesListFragment extends Fragment implements ProductsAdapter.OnProductClickCallBack, FavoritesContract.View {
     private RecyclerView mRecyclerView;
     private ProductsAdapter mAdapter;
     private Context mContext;
-    private List<Product> mProductList;
+    private FavoritesPresenter mPresenter;
+    private List<Product> mProducts;
     private final int SPAN_WIDTH = 100;
 
     @Nullable
@@ -38,21 +40,29 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.favorites_list_fragment, container, false);
         mContext = getContext();
-        mProductList = App.getDbManager(mContext).getAllProducts();
+        mPresenter = new FavoritesPresenter();
+        mPresenter.attachView(this);
         initViews(view);
-        mAdapter.setOnClickCallBack(this);
         return view;
     }
 
-    private void initRecycler(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler_view);
-        mAdapter = new ProductsAdapter(mProductList);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount()));
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.loadProducts();
+        mAdapter.notifyDataSetChanged();
     }
 
+    private void initAdapter() {
+        mAdapter = new ProductsAdapter(mProducts);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount()));
+        mAdapter.setOnClickCallBack(this);
+    }
+
+
     private void initViews(View view) {
-        initRecycler(view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler_view);
     }
 
     private int calculateSpanCount() {
@@ -67,7 +77,20 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
     @Override
     public void onItemClick(Product product) {
         Intent intent = new Intent(mContext, DetailProductActivity.class);
-        intent.putExtra(ProductsListActivity.PRODUCT_EXTRA_KEY,product);
+        intent.putExtra(ProductsListActivity.PRODUCT_EXTRA_KEY, product);
         startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.commitData();
+    }
+
+    @Override
+    public void onProductsLoaded(List<Product> products) {
+        mProducts = products;
+        if (mProducts != null)
+            initAdapter();
     }
 }

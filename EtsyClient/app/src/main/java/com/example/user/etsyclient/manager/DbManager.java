@@ -156,6 +156,37 @@ public class DbManager implements DbHandler {
         return -1;
     }
 
+    @Override
+    public void deleteAll() {
+        try {
+            deleteAllImages();
+            mDatabase = mDbHelper.getWritableDatabase();
+            mDatabase.delete(DbContract.ProductsHelper.TABLE_PRODUCTS, null, null);
+        } catch (Exception ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        } finally {
+            if (mDatabase != null)
+                mDatabase.close();
+        }
+    }
+
+    private void deleteAllImages() {
+        try {
+            mDatabase = mDbHelper.getWritableDatabase();
+            mDatabase.delete(DbContract.ImagesHelper.TABLE_IMAGES, null, null);
+        } catch (Exception ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        } finally {
+            if (mDatabase != null)
+                mDatabase.close();
+        }
+    }
+
+    public void addAllProducts(List<Product> products) {
+        for (Product p : products)
+            addProduct(p);
+    }
+
     private void addImages(List<Image> images) {
         ContentValues contentValues;
         try {
@@ -190,6 +221,5 @@ public class DbManager implements DbHandler {
         }
 
     }
-
 
 }
