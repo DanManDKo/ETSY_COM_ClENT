@@ -3,7 +3,9 @@ package com.example.user.etsyclient.manager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.user.etsyclient.db.DbContract;
 import com.example.user.etsyclient.db.DbHandler;
@@ -21,48 +23,71 @@ import java.util.List;
 public class DbManager implements DbHandler {
     private DbHelper mDbHelper;
     private SQLiteDatabase mDatabase;
+    Cursor mCursor;
+    private final String ERROR_TAG = "sqlite";
 
     public DbManager(Context context) {
         mDbHelper = new DbHelper(context);
-        mDatabase = mDbHelper.getWritableDatabase();
+
     }
 
     @Override
     public List<Product> getAllProducts() {
-        Cursor cursor = mDatabase.query(DbContract.ProductsHelper.TABLE_PRODUCTS,
-                null, null, null, null, null, null);
-        List<Product> products = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                products.add(getProduct(cursor));
-            } while (cursor.moveToNext());
+        try {
+            mDatabase = mDbHelper.getWritableDatabase();
+            mCursor = mDatabase.query(DbContract.ProductsHelper.TABLE_PRODUCTS,
+                    null, null, null, null, null, null);
+            List<Product> products = new ArrayList<>();
+            if (mCursor.moveToFirst()) {
+                do {
+                    products.add(getProduct(mCursor));
+                } while (mCursor.moveToNext());
 
+            }
+
+            return products;
+        } catch (SQLException ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        } finally {
+            if (mCursor != null)
+                mCursor.close();
+            if (mDbHelper != null)
+                mDbHelper.close();
         }
-        cursor.close();
-        return products;
+        return null;
     }
 
     private List<Image> getImagesOfCurrentProduct(long productId) {
-        List<Image> images = new ArrayList<>();
-        String query = Long.toString(productId);
-        Cursor cursor = mDatabase.query(DbContract.ImagesHelper.TABLE_IMAGES, null,
-                DbContract.ImagesHelper.COLUMN_PRODUCT_ID + " = ?",
-                new String[]{query},
-                null,
-                null,
-                null
-        );
-        if (cursor.moveToFirst()) {
-            do {
-                images.add(getImage(cursor));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return images;
+        try {
+            mDatabase = mDbHelper.getReadableDatabase();
+            List<Image> images = new ArrayList<>();
+            String query = Long.toString(productId);
+            mCursor = mDatabase.query(DbContract.ImagesHelper.TABLE_IMAGES, null,
+                    DbContract.ImagesHelper.COLUMN_PRODUCT_ID + " = ?",
+                    new String[]{query},
+                    null,
+                    null,
+                    null
+            );
+            if (mCursor.moveToFirst()) {
+                do {
+                    images.add(getImage(mCursor));
+                } while (mCursor.moveToNext());
+            }
+            return images;
+        } catch (SQLException ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        } finally {
+            if (mCursor != null)
+                mCursor.close();
+            if (mDbHelper != null)
+                mDbHelper.close();
 
+        }
+        return null;
     }
 
-    private Image getImage(Cursor cursor) {
+    private Image getImage(Cursor cursor) throws SQLException {
         Image image = new Image();
         image.setImageId(cursor.getInt(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_IMAGE_ID)));
         image.setHexCode(cursor.getString(cursor.getColumnIndex(DbContract.ImagesHelper.COLUMN_IMAGE_ID)));
@@ -88,7 +113,7 @@ public class DbManager implements DbHandler {
         return image;
     }
 
-    private Product getProduct(Cursor cursor) {
+    private Product getProduct(Cursor cursor) throws SQLException {
         Product product = new Product();
 
         product.setProductId(cursor.getInt(cursor.getColumnIndex(DbContract.ProductsHelper.COLUMN_PRODUCT_ID)));
@@ -106,7 +131,7 @@ public class DbManager implements DbHandler {
     }
 
     @Override
-    public long addProduct(Product product) {
+    public long addProduct(Product product) throws SQLException {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(DbContract.ProductsHelper.COLUMN_PRODUCT_ID, (int) product.getProductId());
@@ -124,7 +149,7 @@ public class DbManager implements DbHandler {
         return rowNumber;
     }
 
-    private void addImages(List<Image> images) {
+    private synchronized void addImages(List<Image> images) throws SQLException {
         ContentValues contentValues;
         for (Image image : images) {
             contentValues = new ContentValues();
