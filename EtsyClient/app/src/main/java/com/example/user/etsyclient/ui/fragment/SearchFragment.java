@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.contract.CategoriesContract;
 import com.example.user.etsyclient.model.Category;
-import com.example.user.etsyclient.model.Product;
 import com.example.user.etsyclient.presentor.CategoriesPresenter;
 import com.example.user.etsyclient.ui.activity.ProductsListActivity;
 
@@ -60,7 +59,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View,
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
         mKeyWordsET = (EditText) view.findViewById(R.id.key_words_edit_text);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar_search_fragment);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout_search);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         initFab(view);
 
