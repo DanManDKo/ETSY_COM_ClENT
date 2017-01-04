@@ -43,8 +43,14 @@ public class FavoritesManager {
     }
 
     public void commitData() {
-        mDbManager.deleteAll();
-        mDbManager.addAllProducts(mProducts);
+
+        CommitDataTask commitData = new CommitDataTask();
+        try {
+            commitData.execute();
+        } catch (Exception ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        }
+
     }
 
     public boolean isFavorite(Product product) {
@@ -58,6 +64,17 @@ public class FavoritesManager {
         @Override
         protected List<Product> doInBackground(Void... params) {
             return mDbManager.getAllProducts();
+        }
+    }
+
+    private class CommitDataTask extends AsyncTask<List<Product>, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(List<Product>... params) {
+            mDbManager.deleteAll();
+            mDbManager.addAllProducts(mProducts);
+            return null;
         }
     }
 }
