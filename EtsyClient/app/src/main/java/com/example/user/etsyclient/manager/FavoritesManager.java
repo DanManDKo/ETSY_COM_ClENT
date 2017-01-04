@@ -1,6 +1,8 @@
 package com.example.user.etsyclient.manager;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.model.Product;
@@ -14,15 +16,21 @@ import java.util.List;
 public class FavoritesManager {
     private List<Product> mProducts;
     private DbManager mDbManager;
+    private final String ERROR_TAG = "FavoriteManager";
 
     public FavoritesManager(Context context) {
         mDbManager = App.getDbManager(context);
-        mProducts = mDbManager.getAllProducts();
+        GetAllDataTask getData = new GetAllDataTask();
+        try {
+            getData.execute();
+            mProducts = getData.get();
+        } catch (Exception ex) {
+            Log.e(ERROR_TAG, ex.getMessage());
+        }
     }
 
     public List<Product> getProducts() {
-//        if (mProducts == null || mProducts.isEmpty())
-//            mProducts = mDbManager.getAllProducts();
+
         return mProducts;
     }
 
@@ -43,5 +51,13 @@ public class FavoritesManager {
         if (mProducts != null)
             return mProducts.contains(product);
         return false;
+    }
+
+    private class GetAllDataTask extends AsyncTask<Void, Void, List<Product>> {
+
+        @Override
+        protected List<Product> doInBackground(Void... params) {
+            return mDbManager.getAllProducts();
+        }
     }
 }
