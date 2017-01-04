@@ -18,7 +18,7 @@ import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.castoms.EndlessRecyclerViewScrollListener;
 import com.example.user.etsyclient.contract.ProductsContract;
 import com.example.user.etsyclient.model.Product;
-import com.example.user.etsyclient.presenter.ProductsPresenter;
+import com.example.user.etsyclient.presentor.ProductsPresenter;
 import com.example.user.etsyclient.ui.adapter.ProductsAdapter;
 import com.example.user.etsyclient.ui.fragment.SearchFragment;
 

@@ -3,7 +3,7 @@ package com.example.user.etsyclient.contract;
 import android.content.Context;
 
 import com.example.user.etsyclient.model.Product;
-import com.example.user.etsyclient.presenter.BaseMvpPresenter;
+import com.example.user.etsyclient.presentor.BaseMvpPresenter;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 public class FavoritesContract {
-    public interface Presenter extends BaseMvpPresenter<FavoritesContract.View> {
+    public interface Presenter extends BaseMvpPresenter<View> {
         void loadProducts();
 
     }

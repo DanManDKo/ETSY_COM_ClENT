@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.model.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,11 +17,12 @@ public class FavoritesManager {
 
     public FavoritesManager(Context context) {
         mDbManager = App.getDbManager(context);
+        mProducts = mDbManager.getAllProducts();
     }
 
     public List<Product> getProducts() {
-        if (mProducts == null || mProducts.isEmpty())
-            mProducts = mDbManager.getAllProducts();
+//        if (mProducts == null || mProducts.isEmpty())
+//            mProducts = mDbManager.getAllProducts();
         return mProducts;
     }
 

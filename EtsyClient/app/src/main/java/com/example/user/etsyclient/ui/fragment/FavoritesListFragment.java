@@ -13,14 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.R;
 import com.example.user.etsyclient.contract.FavoritesContract;
+import com.example.user.etsyclient.manager.FavoritesManager;
 import com.example.user.etsyclient.model.Product;
-import com.example.user.etsyclient.presenter.FavoritesPresenter;
+import com.example.user.etsyclient.presentor.FavoritesPresenter;
 import com.example.user.etsyclient.ui.activity.DetailProductActivity;
 import com.example.user.etsyclient.ui.activity.ProductsListActivity;
 import com.example.user.etsyclient.ui.adapter.ProductsAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,9 +34,9 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
     private RecyclerView mRecyclerView;
     private ProductsAdapter mAdapter;
     private Context mContext;
-    private FavoritesPresenter mPresenter;
-    private List<Product> mProducts;
+    private List<Product> mProducts = new ArrayList<>();
     private final int SPAN_WIDTH = 100;
+    private FavoritesPresenter mPresenter;
 
     @Nullable
     @Override
@@ -42,28 +45,18 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
         mContext = getContext();
         mPresenter = new FavoritesPresenter();
         mPresenter.attachView(this);
-        initViews(view);
+        initRecycler(view);
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.loadProducts();
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void initAdapter() {
+    private void initRecycler(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler_view);
         mAdapter = new ProductsAdapter(mProducts);
+        mAdapter.setOnClickCallBack(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount()));
-        mAdapter.setOnClickCallBack(this);
     }
 
-
-    private void initViews(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.favorite_recycler_view);
-    }
 
     private int calculateSpanCount() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -75,6 +68,13 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.commitData();
+
+    }
+
+    @Override
     public void onItemClick(Product product) {
         Intent intent = new Intent(mContext, DetailProductActivity.class);
         intent.putExtra(ProductsListActivity.PRODUCT_EXTRA_KEY, product);
@@ -82,15 +82,23 @@ public class FavoritesListFragment extends Fragment implements ProductsAdapter.O
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mPresenter.commitData();
+    public void onProductsLoaded(List<Product> products) {
+        mProducts.clear();
+        mProducts.addAll(products);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onProductsLoaded(List<Product> products) {
-        mProducts = products;
-        if (mProducts != null)
-            initAdapter();
+    public void onResume() {
+        super.onResume();
+        mPresenter.loadProducts();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.commitData();
+        mPresenter.detachView();
     }
 }

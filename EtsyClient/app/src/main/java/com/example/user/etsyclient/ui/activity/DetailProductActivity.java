@@ -30,6 +30,7 @@ import java.util.ArrayList;
  */
 
 public class DetailProductActivity extends AppCompatActivity implements ImageAdapter.OnItemClickCallBack {
+    private FavoritesManager mFavoritesManager;
     private Product mProduct;
     private Toolbar mToolbar;
     private ViewPager mViewPager;
@@ -45,14 +46,13 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
     public static final String POSITION = "position";
     public static final String IMAGES = "images";
     private static final int FIRST_IMAGE = 0;
-    private FavoritesManager mFavoritesManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_product_activity);
-        mFavoritesManager = App.getFavoritesManager(this);
         mProduct = getIntent().getParcelableExtra(ProductsListActivity.PRODUCT_EXTRA_KEY);
+        mFavoritesManager = App.getFavoritesManager(this);
         initViews();
 
     }
@@ -80,8 +80,8 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
             @Override
             public void onClick(View v) {
                 if (mFavoritesManager.isFavorite(mProduct)) {
-                    mFavoritesManager.removeProduct(mProduct);
                     mFavoriteImageView.setImageResource(R.drawable.ic_not_favorite);
+                    mFavoritesManager.removeProduct(mProduct);
                 } else {
                     mFavoriteImageView.setImageResource(R.drawable.ic_favorite);
                     mFavoritesManager.addProduct(mProduct);
@@ -100,12 +100,6 @@ public class DetailProductActivity extends AppCompatActivity implements ImageAda
         mImageAdapter.setOnItemClickCallBack(this);
         mViewPager.setAdapter(mImageAdapter);
         mCirclePageIndicator.setViewPager(mViewPager);
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mFavoritesManager.commitData();
     }
 
     private void initToolbar() {

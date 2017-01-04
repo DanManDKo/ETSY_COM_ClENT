@@ -12,6 +12,6 @@ public interface DbHandler {
     List<Product> getAllProducts();
 
     long addProduct(Product product);
-
     void deleteAll();
+
 }

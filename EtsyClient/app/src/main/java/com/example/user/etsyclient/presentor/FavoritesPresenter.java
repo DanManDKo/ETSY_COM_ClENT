@@ -1,7 +1,8 @@
-package com.example.user.etsyclient.presenter;
+package com.example.user.etsyclient.presentor;
 
 import android.content.Context;
 
+import com.example.user.etsyclient.App;
 import com.example.user.etsyclient.contract.FavoritesContract;
 import com.example.user.etsyclient.manager.FavoritesManager;
 
@@ -28,7 +29,7 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
     public void attachView(FavoritesContract.View view) {
         mView = view;
         mContext = view.getContext();
-        mFavoritesManager = new FavoritesManager(mContext);
+        mFavoritesManager = App.getFavoritesManager(mContext);
     }
 
     @Override

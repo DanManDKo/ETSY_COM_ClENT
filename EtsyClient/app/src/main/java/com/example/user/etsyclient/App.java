@@ -31,9 +31,8 @@ public class App extends Application {
     }
 
     public static FavoritesManager getFavoritesManager(Context context) {
-        if (sFavoritesManager == null) {
+        if (sFavoritesManager == null)
             sFavoritesManager = new FavoritesManager(context);
-        }
         return sFavoritesManager;
     }
 }
