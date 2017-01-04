@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import java.util.List;
  * Created by User on 24.12.2016.
  */
 
-public class SearchFragment extends Fragment implements CategoriesContract.View {
+public class SearchFragment extends Fragment implements CategoriesContract.View, SwipeRefreshLayout.OnRefreshListener {
     private FloatingActionButton mFab;
     private CategoriesPresenter mCategoriesPresenter;
     private CoordinatorLayout mCoordinatorLayout;
@@ -38,6 +39,7 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     private Context mContext;
     private EditText mKeyWordsET;
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     public static final String CATEGORY_EXTRA_KEY = "category";
     public static final String KEYWORD_EXTRA_KEY = "keywords";
     public static final String BUNDLE_EXTRA_KEY = "bundle";
@@ -58,6 +60,8 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
         mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
         mKeyWordsET = (EditText) view.findViewById(R.id.key_words_edit_text);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar_search_fragment);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         initFab(view);
 
     }
@@ -90,10 +94,14 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     @Override
     public void onError(String message) {
         Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
+        mProgressBar.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onCategoriesLoaded(List<Category> categories) {
+        if (mSwipeRefreshLayout.isRefreshing())
+            mSwipeRefreshLayout.setRefreshing(false);
         mCategories = categories;
         ArrayAdapter<Category> arrayAdapter = new ArrayAdapter<Category>(mContext,
                 android.R.layout.simple_spinner_item, mCategories);
@@ -112,5 +120,12 @@ public class SearchFragment extends Fragment implements CategoriesContract.View 
     public void onDestroyView() {
         super.onDestroyView();
         mCategoriesPresenter.detachView();
+    }
+
+    @Override
+    public void onRefresh() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
+        mCategoriesPresenter.loadCategoriesFromNetwork();
     }
 }
